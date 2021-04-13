@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const schemaTypes = require('../../../config/schemaTypes.constants');
+const schemaTypes = require('../../../config/schemaTypes');
 const { createValidateQueryParams } = require('../../../services/helper');
 
 const crypto = require('crypto');
