@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const schemaTypes = require('../../../config/schemaTypes');
-const { createValidateQueryParams } = require('../../../services/helper');
+const { createValidateQueryParams } = require('../services/helper');
 
 const modelSchema = new mongoose.Schema({
   title: schemaTypes.requiredString,
