@@ -9,7 +9,7 @@ async function getOne(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -20,7 +20,7 @@ async function getAll(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -46,16 +46,24 @@ async function addOne(req, res) {
 
 async function updateOne(req, res) {
   try {
-    const result = await User.findByIdAndUpdate(
-      req.body.id,
-      { $set: req.body.change },
-      { new: true },
-    );
+    let result;
+
+    if (req.body.password) {
+      result = await User.findById(req.params.id);
+      result.setPassword(req.body.password);
+    }
+    if (req.body.username) {
+      result = await User.findByIdAndUpdate(
+        req.params.id,
+        { $set: req.body.username },
+        { new: true },
+      );
+    }
 
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -66,7 +74,7 @@ async function deleteOne(req, res) {
     res.status(200);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -77,7 +85,7 @@ async function search(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
