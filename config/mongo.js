@@ -10,6 +10,7 @@ db.once('close', () =>
 );
 
 mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false);
 
 module.exports.connectToMongoose = function connectToMongoose(dbURI) {
   mongoose.connect(dbURI, {

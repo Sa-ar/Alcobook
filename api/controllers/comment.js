@@ -1,4 +1,5 @@
 const Comment = require('../models/Comment');
+const Cocktail = require('../models/Cocktail');
 
 async function getOne(req, res) {
   try {
@@ -24,8 +25,18 @@ async function getAll(req, res) {
 
 async function addOne(req, res) {
   try {
-    Comment.validateQueryParams(req.body);
-    const result = new model(req.body).save();
+    const newComment = {
+      body: req.body.body,
+      author: req.body.user.username,
+      authorRef: req.body.user._id,
+      likes: [],
+    };
+    const result = await new Comment(newComment).save();
+    await Cocktail.findByIdAndUpdate(
+      req.body.id,
+      { $push: { comments: result._id } },
+      { safe: true, upsert: true },
+    );
 
     res.status(201).json(result);
   } catch (err) {
