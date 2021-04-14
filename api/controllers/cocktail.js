@@ -58,7 +58,7 @@ async function addMany(req, res) {
 async function updateOne(req, res) {
   try {
     const result = await Cocktail.findByIdAndUpdate(
-      req.body.id,
+      req.params.id,
       { $set: req.body.change },
       { new: true },
     );

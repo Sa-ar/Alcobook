@@ -27,8 +27,10 @@ function adminOrCurrentUser(model, userField) {
     const {
       body: { user },
     } = req;
+    const token = getTokenFromHeaders(req);
 
     if (
+      !token ||
       !user ||
       (user.role !== 'Admin' &&
         model.findById(req.params.id)[userField] !== user.id)
