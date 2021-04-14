@@ -8,7 +8,7 @@ async function getOne(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -19,7 +19,7 @@ async function getAll(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -41,22 +41,22 @@ async function addOne(req, res) {
     res.status(201).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
 async function updateOne(req, res) {
   try {
     const result = await Comment.findByIdAndUpdate(
-      req.body.id,
-      { $set: req.body.change },
+      req.params.id,
+      { $set: { body: req.body.body } },
       { new: true },
     );
 
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -67,7 +67,7 @@ async function deleteOne(req, res) {
     res.status(200);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -78,7 +78,7 @@ async function search(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 

@@ -7,7 +7,7 @@ async function getOne(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -18,19 +18,29 @@ async function getAll(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
 async function addOne(req, res) {
   try {
-    Cocktail.validateQueryParams(req.body);
-    const result = await new Cocktail(req.body).save();
+    const newCocktail = {
+      title: req.body.title,
+      image: req.body.image,
+      body: req.body.body,
+      ingredients: req.body.ingredients,
+      steps: req.body.steps,
+      author: req.body.user.username,
+      authorRef: req.body.user._id,
+      likes: [],
+      comments: [],
+    };
+    const result = await new Cocktail(newCocktail).save();
 
     res.status(201).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -41,7 +51,7 @@ async function addMany(req, res) {
     res.status(201).json(result);
   } catch (err) {
     console.error(err.message);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -56,7 +66,7 @@ async function updateOne(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -67,7 +77,7 @@ async function deleteOne(req, res) {
     res.status(200);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -78,7 +88,7 @@ async function search(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -97,7 +107,7 @@ async function leadingAuthor(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
@@ -125,7 +135,7 @@ async function cocktailsPerDay(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(400).end();
+    res.status(400).end(err);
   }
 }
 
