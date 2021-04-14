@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
-    "start": "node main"
+    "start": "node ./index.js",
+    "scrapper:file": "run-func scrapper.js saveCocktailsToFile"
   },
   "author": "Saar Davidson",
   "license": "ISC",
@@ -34,6 +35,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
     "nodemon": "^2.0.7",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "run-func": "^1.0.5"
   }
 }

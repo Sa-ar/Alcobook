@@ -25,11 +25,22 @@ async function getAll(req, res) {
 async function addOne(req, res) {
   try {
     Cocktail.validateQueryParams(req.body);
-    const result = new model(req.body).save();
+    const result = await new Cocktail(req.body).save();
 
     res.status(201).json(result);
   } catch (err) {
     console.error(err);
+    res.status(400).end();
+  }
+}
+
+async function addMany(req, res) {
+  try {
+    const result = await Cocktail.insertMany(req.cocktails);
+
+    res.status(201).json(result);
+  } catch (err) {
+    console.error(err.message);
     res.status(400).end();
   }
 }
@@ -51,7 +62,7 @@ async function updateOne(req, res) {
 
 async function deleteOne(req, res) {
   try {
-    await Cocktail.findByIdAndDelete(req.body.id);
+    await Cocktail.findByIdAndRemove(req.body.id);
 
     res.status(200);
   } catch (err) {
@@ -90,7 +101,7 @@ async function leadingAuthor(req, res) {
   }
 }
 
-async function cocktailPerDay(req, res) {
+async function cocktailsPerDay(req, res) {
   try {
     const result = await Cocktail.group({
       keyf: function (doc) {
@@ -122,9 +133,10 @@ module.exports = {
   getOne,
   getAll,
   addOne,
+  addMany,
   updateOne,
   deleteOne,
   search,
   leadingAuthor,
-  cocktailPerDay,
+  cocktailsPerDay,
 };

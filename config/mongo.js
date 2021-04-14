@@ -9,6 +9,8 @@ db.once('close', () =>
   console.log('MongoDB db connection successfully terminated'),
 );
 
+mongoose.set('useCreateIndex', true);
+
 module.exports.connectToMongoose = function connectToMongoose(dbURI) {
   mongoose.connect(dbURI, {
     useNewUrlParser: true,

@@ -1,14 +1,19 @@
 const mongoose = require('mongoose');
-const schemaTypes = require('../../../config/schemaTypes');
+const schemaTypes = require('../../config/schemaTypes');
 const { createValidateQueryParams } = require('../services/helper');
 
-const modelSchema = new mongoose.Schema({
-  body: schemaTypes.requiredString,
-  author: schemaTypes.requiredString,
-  authorRef: schemaTypes.refTo('User'),
-  createdAt: schemaTypes.timestamp,
-  likes: schemaTypes.arrayOf('User'),
-});
+const modelSchema = new mongoose.Schema(
+  {
+    body: schemaTypes.requiredString,
+    author: schemaTypes.requiredString,
+    authorRef: schemaTypes.refTo('User'),
+    createdAt: schemaTypes.timestamp,
+    likes: schemaTypes.arrayOf('User'),
+  },
+  {
+    collection: 'Comments',
+  },
+);
 
 modelSchema.methods.numOfLikes = function () {
   return this.likes.length;

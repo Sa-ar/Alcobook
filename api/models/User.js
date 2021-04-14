@@ -1,20 +1,21 @@
 const mongoose = require('mongoose');
-const schemaTypes = require('../../../config/schemaTypes');
+const schemaTypes = require('../../config/schemaTypes');
 const { createValidateQueryParams } = require('../services/helper');
 
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
-const modelSchema = new mongoose.Schema({
-  username: schemaTypes.requiredUniqueString,
-  password: schemaTypes.requiredString,
-  role: schemaTypes.userRolesString,
-  hash: schemaTypes.requiredString,
-  salt: schemaTypes.requiredString,
-  cocktails: schemaTypes.arrayOf('Cocktail'),
-  comments: schemaTypes.arrayOf('Comment'),
-  cocktailsLiked: schemaTypes.arrayOf('Cocktail'),
-});
+const modelSchema = new mongoose.Schema(
+  {
+    username: schemaTypes.requiredUniqueString,
+    role: schemaTypes.userRolesString,
+    hash: schemaTypes.requiredString,
+    salt: schemaTypes.requiredString,
+  },
+  {
+    collection: 'Users',
+  },
+);
 
 modelSchema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(16).toString('hex');

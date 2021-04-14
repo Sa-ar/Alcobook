@@ -1,14 +1,27 @@
-const authService = require('../services/auth');
+const passport = require('passport');
 
 module.exports = {
   login(req, res, next) {
-    const {
-      body: { user },
-    } = req;
+    passport.authenticate('local', function (err, user, info) {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.status(400).json({ error: 'No user.' });
+      }
 
-    authService.userValidation(user, res);
+      req.logIn(user, function (err) {
+        if (err) {
+          return next(err);
+        }
 
-    return authService.authenticate(req, res, next);
+        user.token = user.generateJWT();
+
+        return res.status(200).json({
+          user: user.toAuthJSON(),
+        });
+      });
+    })(req, res, next);
   },
   logout(req, res) {
     req.logOut();

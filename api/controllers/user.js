@@ -1,7 +1,6 @@
 const Comment = require('../models/Comment');
 const Cocktail = require('../models/Cocktail');
 const User = require('../models/User');
-const { userValidation } = require('../services/auth');
 
 async function getOne(req, res) {
   try {
@@ -25,13 +24,24 @@ async function getAll(req, res) {
   }
 }
 
-async function addOne(user) {
-  userValidation(user, res);
+async function addOne(req, res) {
+  const { username, password } = req.body;
 
-  const newUser = new User(user);
-  newUser.setPassword(user.password);
+  try {
+    const newUser = new User({
+      username,
+      role: 'User',
+    });
+    newUser.setPassword(password);
 
-  return newUser.save().then(() => res.json({ user: finalUser.toAuthJSON() }));
+    await newUser.save();
+
+    return res.status(201).json({ username: newUser.username });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ error: "Couldn't create user.", message: error.message });
+  }
 }
 
 async function updateOne(req, res) {

@@ -13,9 +13,10 @@ const routes = require('./api/routes/index');
 
 const app = express();
 
+const port = process.env.PORT || 8080;
+
 app.use(cors());
 app.use(require('morgan')('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
     secret: process.env.PASSPORT_SECRET,
@@ -26,12 +27,10 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', routes);
 
-connectToMongoose(dbURI);
+connectToMongoose(process.env.DB_URI);
 app.listen(port, () => console.log(`Server is running on port: ${port}`));
-
-const PORT = process.env.PORT || 8080;
-
-startServer(process.env.DB_URI, PORT);
