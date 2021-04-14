@@ -5,7 +5,7 @@ const getTokenFromHeaders = (req) => {
     headers: { authorization },
   } = req;
 
-  if (authorization && authorization.split(' ')[0] === 'Token') {
+  if (authorization && authorization.split(' ')[0] === 'Bearer') {
     return authorization.split(' ')[1];
   }
 
@@ -41,11 +41,9 @@ function adminOrCurrentUser(model, userField) {
 }
 
 function notLoggedIn(req, res, next) {
-  const {
-    body: { user },
-  } = req;
+  const token = getTokenFromHeaders(req);
 
-  if (!user) {
+  if (!token) {
     return next();
   }
 
