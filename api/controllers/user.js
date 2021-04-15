@@ -69,9 +69,9 @@ async function updateOne(req, res) {
 
 async function deleteOne(req, res) {
   try {
-    await User.findByIdAndDelete(req.body.id);
+    await User.findByIdAndDelete(req.params.id);
 
-    res.status(200);
+    res.status(200).end();
   } catch (err) {
     console.error(err);
     res.status(400).end(err);
