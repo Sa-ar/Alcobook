@@ -28,8 +28,8 @@ modelSchema.methods.numOfComments = function () {
   return this.comments.length;
 };
 
-modelSchema.post('remove', (doc) => {
-  Comment.deleteMany(doc.comments);
+modelSchema.post('remove', async (doc) => {
+  await Comment.deleteMany({ _id: { $in: doc.comments } });
 });
 
 module.exports = mongoose.model('Cocktail', modelSchema);

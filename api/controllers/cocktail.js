@@ -1,8 +1,9 @@
 const Cocktail = require('../models/Cocktail');
+const Comment = require('../models/Comment');
 
 async function getOne(req, res) {
   try {
-    const result = await Cocktail.findById(req.body.id);
+    const result = await Cocktail.findById(req.params.id).populate('comments');
 
     res.status(200).json(result);
   } catch (err) {
@@ -72,9 +73,13 @@ async function updateOne(req, res) {
 
 async function deleteOne(req, res) {
   try {
-    await Cocktail.findByIdAndRemove(req.body.id);
+    await Cocktail.findById(req.params.id, function (err, cocktail) {
+      if (err) throw new Error(err);
 
-    res.status(200);
+      cocktail.remove();
+    });
+
+    res.status(200).end();
   } catch (err) {
     console.error(err);
     res.status(400).end(err);

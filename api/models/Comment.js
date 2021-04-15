@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const schemaTypes = require('../../config/schemaTypes');
-const Cocktail = require('./Cocktail');
 
 const modelSchema = new mongoose.Schema(
   {
