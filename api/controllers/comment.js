@@ -60,6 +60,21 @@ async function updateOne(req, res) {
   }
 }
 
+async function addLike(req, res) {
+  try {
+    const result = await Comment.findByIdAndUpdate(
+      req.params.id,
+      { $push: { likes: req.body.user._id } },
+      { new: true },
+    );
+
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(400).end(err);
+  }
+}
+
 async function deleteOne(req, res) {
   try {
     await Comment.findByIdAndRemove(req.params.id);
@@ -91,6 +106,7 @@ module.exports = {
   getAll,
   addOne,
   updateOne,
+  addLike,
   deleteOne,
   search,
 };

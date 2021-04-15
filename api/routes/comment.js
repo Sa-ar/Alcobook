@@ -13,6 +13,7 @@ router
 router
   .route('/:id')
   .get(commentController.getOne)
+  .post(auth.required, commentController.addLike)
   .patch(editorPermission, commentController.updateOne)
   .delete(editorPermission, commentController.deleteOne);
 

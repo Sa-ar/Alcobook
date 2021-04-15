@@ -71,6 +71,21 @@ async function updateOne(req, res) {
   }
 }
 
+async function addLike(req, res) {
+  try {
+    const result = await Cocktail.findByIdAndUpdate(
+      req.params.id,
+      { $push: { likes: req.body.user._id } },
+      { new: true },
+    );
+
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(400).end(err);
+  }
+}
+
 async function deleteOne(req, res) {
   try {
     await Cocktail.findById(req.params.id, function (err, cocktail) {
@@ -150,6 +165,7 @@ module.exports = {
   addOne,
   addMany,
   updateOne,
+  addLike,
   deleteOne,
   search,
   leadingAuthor,
