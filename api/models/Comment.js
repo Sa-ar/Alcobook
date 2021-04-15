@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const schemaTypes = require('../../config/schemaTypes');
-const { createValidateQueryParams } = require('../services/helper');
+const Cocktail = require('./Cocktail');
 
 const modelSchema = new mongoose.Schema(
   {
@@ -18,10 +18,5 @@ const modelSchema = new mongoose.Schema(
 modelSchema.methods.numOfLikes = function () {
   return this.likes.length;
 };
-
-modelSchema.methods.validateQueryParams = createValidateQueryParams([
-  'body',
-  'author',
-]);
 
 module.exports = mongoose.model('Comment', modelSchema);

@@ -7,10 +7,3 @@ module.exports.objectHasOnly = function (object, keys) {
 
   return true;
 };
-
-module.exports.createValidateQueryParams = function (acceptableParams) {
-  return function (params) {
-    if (!objectHasOnly(params, acceptableParams))
-      throw new Error('Wrong parameters for the search.');
-  };
-};

@@ -60,8 +60,4 @@ modelSchema.methods.isAdmin = function () {
   return this.role === 'Admin';
 };
 
-modelSchema.methods.validateQueryParams = createValidateQueryParams([
-  'username',
-]);
-
 module.exports = mongoose.model('User', modelSchema);

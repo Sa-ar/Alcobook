@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const schemaTypes = require('../../config/schemaTypes');
-const { createValidateQueryParams } = require('../services/helper');
 const Comment = require('./Comment');
 
 const modelSchema = new mongoose.Schema(
@@ -29,14 +28,7 @@ modelSchema.methods.numOfComments = function () {
   return this.comments.length;
 };
 
-modelSchema.methods.validateQueryParams = createValidateQueryParams([
-  'title',
-  'body',
-  'ingredients',
-  'author',
-]);
-
-modelSchema.pre('remove', (doc) => {
+modelSchema.post('remove', (doc) => {
   Comment.deleteMany(doc.comments);
 });
 

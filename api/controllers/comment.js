@@ -62,9 +62,13 @@ async function updateOne(req, res) {
 
 async function deleteOne(req, res) {
   try {
-    await Comment.findByIdAndDelete(req.body.id);
+    await Comment.findByIdAndRemove(req.params.id);
+    await Cocktail.updateOne(
+      { comments: { $in: [req.params.id] } },
+      { $pull: { comments: req.params.id } },
+    );
 
-    res.status(200);
+    res.status(200).end();
   } catch (err) {
     console.error(err);
     res.status(400).end(err);
