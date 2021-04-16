@@ -95,7 +95,26 @@ async function deleteOne(req, res) {
 
 async function search(req, res) {
   try {
-    const result = await Comment.find(req.body.search);
+    const result = await Comment.aggregate([
+      {
+        $match: {
+          body: { $regex: req.body.search.body, $options: 'i' },
+        },
+      },
+      { $unwind: '$body' },
+      {
+        $match: {
+          body: { $regex: req.body.search.body, $options: 'i' },
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          body: { $first: '$body' },
+          author: { $first: '$author' },
+        },
+      },
+    ]);
 
     res.status(200).json(result);
   } catch (err) {

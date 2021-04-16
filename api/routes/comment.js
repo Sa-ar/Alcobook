@@ -10,13 +10,13 @@ router
   .get(commentController.getAll)
   .post(auth.required, commentController.addOne);
 
+router.route('/search').post(commentController.search);
+
 router
   .route('/:id')
   .get(commentController.getOne)
   .post(auth.required, commentController.toggleLike)
   .patch(editorPermission, commentController.updateOne)
   .delete(editorPermission, commentController.deleteOne);
-
-router.route('/search').get(commentController.search);
 
 module.exports = router;
