@@ -106,7 +106,24 @@ async function deleteOne(req, res) {
 
 async function search(req, res) {
   try {
-    const result = await Cocktail.find(req.body.search);
+    const search = req.body.search;
+    const searchQuery = {};
+
+    if (search.title) {
+      searchQuery.title = search.title;
+    }
+    if (search.author) {
+      searchQuery.author = search.author;
+    }
+    if (search.body) {
+      searchQuery.body = { $regex: search.body, $options: 'i' };
+    }
+    if (search.ingredient) {
+      searchQuery.ingredients = { $regex: search.ingredient, $options: 'i' };
+    }
+
+    console.log(searchQuery);
+    const result = await Cocktail.find(searchQuery);
 
     res.status(200).json(result);
   } catch (err) {
