@@ -65,10 +65,11 @@ async function toggleLike(req, res) {
     const comment = await Comment.findById(req.params.id);
 
     if (comment.likes.includes(req.body.user._id)) {
-      comment.update({ $pull: { likes: req.body.user._id } });
+      comment.likes.pull(req.body.user._id);
     } else {
-      comment.update({ $push: { likes: req.body.user._id } });
+      comment.likes.push(req.body.user._id);
     }
+    comment.save();
 
     res.status(200).json(comment);
   } catch (err) {

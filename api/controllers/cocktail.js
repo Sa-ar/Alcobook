@@ -73,14 +73,14 @@ async function updateOne(req, res) {
 
 async function toggleLike(req, res) {
   try {
-
     const cocktail = await Cocktail.findById(req.params.id);
 
     if (cocktail.likes.includes(req.body.user._id)) {
-      cocktail.update({ $pull: { likes: req.body.user._id } });
-    } else{
-      cocktail.update({ $push: { likes: req.body.user._id } });
+      cocktail.likes.pull(req.body.user._id);
+    } else {
+      cocktail.likes.push(req.body.user._id);
     }
+    cocktail.save();
 
     res.status(200).json(cocktail);
   } catch (err) {
