@@ -92,16 +92,26 @@ async function search(req, res) {
   }
 }
 
-async function getComments(userId) {
-  const items = await Comment.find({ user: userId });
+async function getComments(req, res) {
+  try {
+    const comments = await Comment.find({ authorRef: req.params.id });
 
-  return items;
+    res.status(200).json(comments);
+  } catch (err) {
+    console.error(err);
+    res.status(400).end(err);
+  }
 }
 
-async function getCocktails(userId) {
-  const items = await Cocktail.find({ user: userId });
+async function getCocktails(req, res) {
+  try {
+    const cocktails = await Cocktail.find({ authorRef: req.params.id });
 
-  return items;
+    res.status(200).json(cocktails);
+  } catch (err) {
+    console.error(err);
+    res.status(400).end(err);
+  }
 }
 
 module.exports = {

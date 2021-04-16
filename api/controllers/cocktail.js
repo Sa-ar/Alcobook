@@ -134,15 +134,15 @@ async function search(req, res) {
 
 async function leadingAuthor(req, res) {
   try {
-    const result = await Cocktail.mapReduce(
-      function () {
+    const result = await Cocktail.mapReduce({
+      map: function () {
         emit(this.author, this.likes);
       },
-      function (author, likes) {
+      reduce: function (author, likes) {
         return Array.sum(likes.length);
       },
-      { out: 'leadingAuthor' },
-    );
+      out: { reduce: 'leadingAuthor' },
+    });
 
     res.status(200).json(result);
   } catch (err) {
@@ -153,24 +153,37 @@ async function leadingAuthor(req, res) {
 
 async function cocktailsPerDay(req, res) {
   try {
-    const result = await Cocktail.group({
-      keyf: function (doc) {
-        var date = new Date(doc.date);
-        var dateKey =
-          date.getMonth() +
-          1 +
-          '/' +
-          date.getDate() +
-          '/' +
-          date.getFullYear() +
-          '';
-        return { day: dateKey };
+    const result = await Cocktail.aggregate([
+      {
+        $project: {
+          yearMonthDay: {
+            $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+          },
+          time: {
+            $dateToString: { format: '%H:%M:%S:%L', date: '$createdAt' },
+          },
+        },
       },
-      initial: { count: 0 },
-      reduce: function (obj, prev) {
-        prev.count++;
-      },
-    });
+      { $group: { _id: '$yearMonthDay', cocktails: { $push: '$_id' } } },
+    ]);
+    // group({
+    //       keyf: function (doc) {
+    //         var date = new Date(doc.date);
+    //         var dateKey =
+    //           date.getMonth() +
+    //           1 +
+    //           '/' +
+    //           date.getDate() +
+    //           '/' +
+    //           date.getFullYear() +
+    //           '';
+    //         return { day: dateKey };
+    //       },
+    //       initial: { count: 0 },
+    //       reduce: function (obj, prev) {
+    //         prev.count++;
+    //       },
+    //     });
 
     res.status(200).json(result);
   } catch (err) {
