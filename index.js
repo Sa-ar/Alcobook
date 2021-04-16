@@ -2,8 +2,8 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 /* eslint-disable no-console */
+const http = require('http');
 const express = require('express');
-const path = require('path');
 const session = require('express-session');
 const cors = require('cors');
 const passport = require('passport');
@@ -12,6 +12,9 @@ const { connectToMongoose } = require('./config/mongo');
 const routes = require('./api/routes/index');
 
 const app = express();
+
+const server = http.createServer(app);
+const io = require('socket.io')(server);
 
 const port = process.env.PORT || 8080;
 
@@ -32,5 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', routes);
 
+require('./socket').connect(io);
+
 connectToMongoose(process.env.DB_URI);
-app.listen(port, () => console.log(`Server is running on port: ${port}`));
+server.listen(port, () => console.log(`Server is running on port: ${port}`));

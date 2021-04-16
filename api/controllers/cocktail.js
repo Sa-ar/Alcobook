@@ -166,24 +166,6 @@ async function cocktailsPerDay(req, res) {
       },
       { $group: { _id: '$yearMonthDay', cocktails: { $push: '$_id' } } },
     ]);
-    // group({
-    //       keyf: function (doc) {
-    //         var date = new Date(doc.date);
-    //         var dateKey =
-    //           date.getMonth() +
-    //           1 +
-    //           '/' +
-    //           date.getDate() +
-    //           '/' +
-    //           date.getFullYear() +
-    //           '';
-    //         return { day: dateKey };
-    //       },
-    //       initial: { count: 0 },
-    //       reduce: function (obj, prev) {
-    //         prev.count++;
-    //       },
-    //     });
 
     res.status(200).json(result);
   } catch (err) {
