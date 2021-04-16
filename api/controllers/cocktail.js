@@ -71,15 +71,18 @@ async function updateOne(req, res) {
   }
 }
 
-async function addLike(req, res) {
+async function toggleLike(req, res) {
   try {
-    const result = await Cocktail.findByIdAndUpdate(
-      req.params.id,
-      { $push: { likes: req.body.user._id } },
-      { new: true },
-    );
 
-    res.status(200).json(result);
+    const cocktail = await Cocktail.findById(req.params.id);
+
+    if (cocktail.likes.includes(req.body.user._id)) {
+      cocktail.update({ $pull: { likes: req.body.user._id } });
+    } else{
+      cocktail.update({ $push: { likes: req.body.user._id } });
+    }
+
+    res.status(200).json(cocktail);
   } catch (err) {
     console.error(err);
     res.status(400).end(err);
@@ -165,7 +168,7 @@ module.exports = {
   addOne,
   addMany,
   updateOne,
-  addLike,
+  toggleLike,
   deleteOne,
   search,
   leadingAuthor,

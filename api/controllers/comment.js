@@ -60,15 +60,17 @@ async function updateOne(req, res) {
   }
 }
 
-async function addLike(req, res) {
+async function toggleLike(req, res) {
   try {
-    const result = await Comment.findByIdAndUpdate(
-      req.params.id,
-      { $push: { likes: req.body.user._id } },
-      { new: true },
-    );
+    const comment = await Comment.findById(req.params.id);
 
-    res.status(200).json(result);
+    if (comment.likes.includes(req.body.user._id)) {
+      comment.update({ $pull: { likes: req.body.user._id } });
+    } else {
+      comment.update({ $push: { likes: req.body.user._id } });
+    }
+
+    res.status(200).json(comment);
   } catch (err) {
     console.error(err);
     res.status(400).end(err);
@@ -106,7 +108,7 @@ module.exports = {
   getAll,
   addOne,
   updateOne,
-  addLike,
+  toggleLike,
   deleteOne,
   search,
 };

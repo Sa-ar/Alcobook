@@ -14,7 +14,7 @@ router
 router
   .route('/:id')
   .get(cocktailController.getOne)
-  .post(auth.required, cocktailController.addLike)
+  .post(auth.required, cocktailController.toggleLike)
   .patch(editorPermission, cocktailController.updateOne)
   .delete(editorPermission, cocktailController.deleteOne);
 
