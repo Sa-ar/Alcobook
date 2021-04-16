@@ -26,4 +26,6 @@ router
   .route('/scrape')
   .post(auth.admin, scrapeCocktails, cocktailController.addMany);
 
+router.route('/search').get(cocktailController.search);
+
 module.exports = router;

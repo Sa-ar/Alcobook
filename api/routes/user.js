@@ -17,4 +17,6 @@ router.route('/:id/comments').get(userController.getComments);
 
 router.route('/:id/cocktails').get(userController.getCocktails);
 
+router.route('/search').get(userController.search);
+
 module.exports = router;

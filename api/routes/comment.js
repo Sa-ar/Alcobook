@@ -17,4 +17,6 @@ router
   .patch(editorPermission, commentController.updateOne)
   .delete(editorPermission, commentController.deleteOne);
 
+router.route('/search').get(commentController.search);
+
 module.exports = router;
