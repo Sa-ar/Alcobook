@@ -5,11 +5,6 @@ const editorPermission = auth.adminOrCurrentUser(
   require('../models/Comment', 'authorRef'),
 );
 
-router
-  .route('/')
-  .get(commentController.getAll)
-  .post(auth.required, commentController.addOne);
-
 router.route('/search').post(commentController.search);
 
 router
@@ -18,5 +13,10 @@ router
   .post(auth.required, commentController.toggleLike)
   .patch(editorPermission, commentController.updateOne)
   .delete(editorPermission, commentController.deleteOne);
+
+router
+  .route('/')
+  .get(commentController.getAll)
+  .post(auth.required, commentController.addOne);
 
 module.exports = router;

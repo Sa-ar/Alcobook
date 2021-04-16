@@ -80,7 +80,10 @@ async function deleteOne(req, res) {
 
 async function search(req, res) {
   try {
-    const result = await User.find(req.body.search);
+    const searchQuery = {
+      username: { $regex: req.body.search.username, $options: 'i' },
+    };
+    const result = await User.find(searchQuery);
 
     res.status(200).json(result);
   } catch (err) {

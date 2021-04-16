@@ -2,7 +2,11 @@ const router = require('express').Router();
 const auth = require('../middleware/auth');
 const userController = require('../controllers/user');
 
-router.route('/').get(userController.getAll);
+router.route('/search').post(userController.search);
+
+router.route('/:id/comments').get(userController.getComments);
+
+router.route('/:id/cocktails').get(userController.getCocktails);
 
 router
   .route('/:id')
@@ -13,10 +17,6 @@ router
   )
   .delete(auth.admin, userController.deleteOne);
 
-router.route('/:id/comments').get(userController.getComments);
-
-router.route('/:id/cocktails').get(userController.getCocktails);
-
-router.route('/search').get(userController.search);
+router.route('/').get(userController.getAll);
 
 module.exports = router;
