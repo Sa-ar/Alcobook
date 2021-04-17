@@ -3,7 +3,7 @@ const Cocktail = require('../models/Cocktail');
 
 async function getOne(req, res) {
   try {
-    const result = await Comment.findById(req.body.id);
+    const result = await Comment.findById(req.params.id);
 
     res.status(200).json(result);
   } catch (err) {
