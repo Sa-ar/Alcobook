@@ -4,7 +4,8 @@ const User = require('../models/User');
 
 async function getOne(req, res) {
   try {
-    const result = await User.findById(req.body.id);
+    const user = await User.findById(req.params.id);
+    const result = { _id: user._id, username: user.username, role: user.role };
 
     res.status(200).json(result);
   } catch (err) {
