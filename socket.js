@@ -3,17 +3,21 @@ let usersSockets = [];
 module.exports.connect = function (io) {
   io.on('connection', (socket) => {
     addClientToMap(socket);
-    console.log(`user is connected ${socket.id}`);
+    console.log(`${socket.id} is connected`);
 
-    usersSockets.forEach((socket) =>
-      socket.emit('online', {
-        online: usersSockets.map((socket) => socket.id),
-      }),
+    io.emit(
+      'online',
+      usersSockets.map((socket) => socket.id),
     );
 
     socket.on('disconnect', () => {
       removeClientFromMap(socket);
-      console.log(`user is disconnected`);
+      console.log(`${socket.id} is disconnected`);
+
+      io.emit(
+        'online',
+        usersSockets.map((socket) => socket.id),
+      );
     });
   });
 };
