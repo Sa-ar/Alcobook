@@ -14,7 +14,7 @@ async function getOne(req, res) {
 
 async function getAll(req, res) {
   try {
-    const result = await Comment.find({});
+    const result = await Comment.find({}, null, { sort: { createdAt: -1 } });
 
     res.status(200).json(result);
   } catch (err) {

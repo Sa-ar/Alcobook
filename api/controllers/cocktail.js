@@ -14,7 +14,7 @@ async function getOne(req, res) {
 
 async function getAll(req, res) {
   try {
-    const result = await Cocktail.find({}, null, { sort: { createdAt: 1 } });
+    const result = await Cocktail.find({}, null, { sort: { createdAt: -1 } });
 
     res.status(200).json(result);
   } catch (err) {
@@ -122,8 +122,9 @@ async function search(req, res) {
       searchQuery.ingredients = { $regex: search.ingredient, $options: 'i' };
     }
 
-    console.log(searchQuery);
-    const result = await Cocktail.find(searchQuery);
+    const result = await Cocktail.find(searchQuery, null, {
+      sort: { createdAt: -1 },
+    });
 
     res.status(200).json(result);
   } catch (err) {
