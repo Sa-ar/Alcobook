@@ -14,7 +14,18 @@ const routes = require('./api/routes/index');
 const app = express();
 
 const server = http.createServer(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:8080',
+    ],
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Access-Control-Allow-Origin'],
+    credentials: true,
+  },
+});
 
 const port = process.env.PORT || 8080;
 

@@ -1,81 +1,29 @@
-const socketIOJwt = require('socketio-jwt');
-
-module.exports.userSocketMap = new Map();
-const adminSockets = new Map();
+let usersSockets = [];
 
 module.exports.connect = function (io) {
-  io.use(
-    socketIOJwt.authorize({
-      secret: process.env.JWT_SECRET,
-      handshake: true,
-    }),
-  );
-
   io.on('connection', (socket) => {
-    const userName = socket.request._query['username'];
+    addClientToMap(socket);
+    console.log(`user is connected ${socket.id}`);
 
-    addClientToMap(userName, socket);
-    console.log(`${userName} is connected`);
-
-    adminSockets.forEach((adminSocket) =>
-      adminSocket.emit({ online: module.exports.userSocketMap.size }),
+    usersSockets.forEach((socket) =>
+      socket.emit('online', {
+        online: usersSockets.map((socket) => socket.id),
+      }),
     );
 
     socket.on('disconnect', () => {
-      removeClientFromMap(userName, socket);
-      console.log(`${userName} is disconnected`);
-    });
-  }).on('authenticated', (socket) => {
-    const userName = socket.request._query['username'];
-
-    addAdminToMap(userName, socket);
-
-    socket.on('disconnect', () => {
-      removeAdminFromMap(userName, socket);
+      removeClientFromMap(socket);
+      console.log(`user is disconnected`);
     });
   });
 };
 
-function addClientToMap(userName, socket) {
-  const userSocketMap = module.exports.userSocketMap;
-
-  if (!userSocketMap.has(userName)) {
-    userSocketMap.set(userName, new Set([socket]));
-  } else {
-    userSocketMap.get(userName).add(socket);
-  }
+function addClientToMap(socket) {
+  usersSockets.push(socket);
 }
 
-function addAdminToMap(userName, socket) {
-  if (!adminSockets.has(userName)) {
-    adminSockets.set(userName, new Set([socket]));
-  } else {
-    adminSockets.get(userName).add(socket);
-  }
-}
-
-function removeClientFromMap(userName, socket) {
-  const userSocketMap = module.exports.userSocketMap;
-
-  if (userSocketIdMap.has(userName)) {
-    let userSocketSet = userSocketMap.get(userName);
-
-    userSocketSet.delete(socket);
-
-    if (userSocketIdSet.size == 0) {
-      userSocketMap.delete(userName);
-    }
-  }
-}
-
-function removeAdminFromMap(userName, socket) {
-  if (adminSockets.has(userName)) {
-    let adminSocketIdSet = adminSockets.get(userName);
-
-    adminSocketIdSet.delete(socket);
-
-    if (adminSocketIdSet.size == 0) {
-      adminSockets.delete(userName);
-    }
-  }
+function removeClientFromMap(socket) {
+  usersSockets = usersSockets.filter(
+    (userSocket) => userSocket.id === socket.id,
+  );
 }
