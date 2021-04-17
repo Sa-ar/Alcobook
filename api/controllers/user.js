@@ -47,21 +47,21 @@ async function addOne(req, res) {
 
 async function updateOne(req, res) {
   try {
-    let result;
+    const user = await User.findById(req.params.id);
 
     if (req.body.password) {
-      result = await User.findById(req.params.id);
-      result.setPassword(req.body.password);
+      user.setPassword(req.body.password);
     }
     if (req.body.username) {
-      result = await User.findByIdAndUpdate(
-        req.params.id,
-        { $set: req.body.username },
-        { new: true },
-      );
+      user.username = req.body.username;
+    }
+    if (req.body.role) {
+      user.role = req.body.role;
     }
 
-    res.status(200).json(result);
+    const { _id, username, role } = await user.save();
+
+    res.status(200).json({ _id, username, role });
   } catch (err) {
     console.error(err);
     res.status(400).end(err);
